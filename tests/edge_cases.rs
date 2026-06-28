@@ -3,7 +3,7 @@
 //! These pin grammar quirks: the ASCII word gate, last-token-wins, the
 //! trailing-anchor failure, mismatched brackets, and inner whitespace.
 
-use parse_author_rs::{parse, Author};
+use parse_author::{parse, Author};
 
 fn author(name: Option<&str>, email: Option<&str>, url: Option<&str>) -> Author {
     Author {

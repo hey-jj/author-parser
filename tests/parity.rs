@@ -3,7 +3,7 @@
 //! Each test mirrors one assertion from the canonical npm test suite. The
 //! grouping matches that suite so coverage maps one to one.
 
-use parse_author_rs::{parse, Author};
+use parse_author::{parse, Author};
 
 /// Build an expected [`Author`] from optional parts.
 fn author(name: Option<&str>, email: Option<&str>, url: Option<&str>) -> Author {
@@ -276,6 +276,42 @@ mod email_and_url {
         assert_eq!(
             parse("<jon.schlinkert@sellside.com>(https://github.com/jonschlinkert)"),
             expected()
+        );
+    }
+}
+
+mod real_world {
+    use super::*;
+
+    // Person strings taken from real package metadata. They exercise the full
+    // name + email + url form with live email and url values.
+    #[test]
+    fn full_person_strings() {
+        assert_eq!(
+            parse(
+                "Jon Schlinkert <jon.schlinkert@sellside.com> (http://twitter.com/jonschlinkert)"
+            ),
+            author(
+                Some("Jon Schlinkert"),
+                Some("jon.schlinkert@sellside.com"),
+                Some("http://twitter.com/jonschlinkert")
+            )
+        );
+        assert_eq!(
+            parse("Sean Lang <slang800@gmail.com> (http://slang.cx)"),
+            author(
+                Some("Sean Lang"),
+                Some("slang800@gmail.com"),
+                Some("http://slang.cx")
+            )
+        );
+        assert_eq!(
+            parse("Tim Oram <mitmaro@gmail.com> (http://www.mitmaro.ca)"),
+            author(
+                Some("Tim Oram"),
+                Some("mitmaro@gmail.com"),
+                Some("http://www.mitmaro.ca")
+            )
         );
     }
 }

@@ -17,7 +17,7 @@ parse-author-rs = "0.1"
 ## Usage
 
 ```rust
-use parse_author_rs::parse;
+use parse_author::parse;
 
 let a = parse("Jon Schlinkert <jon@example.com> (https://example.com)");
 assert_eq!(a.name.as_deref(), Some("Jon Schlinkert"));
@@ -29,7 +29,7 @@ A field is `Some` only when the matching part is present and non-empty. An
 input with no usable parts returns the default, where every field is `None`.
 
 ```rust
-use parse_author_rs::{parse, Author};
+use parse_author::{parse, Author};
 
 assert_eq!(parse(""), Author::default());
 assert_eq!(parse("   "), Author::default());

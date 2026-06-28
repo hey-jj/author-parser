@@ -9,7 +9,7 @@
 //! # Examples
 //!
 //! ```
-//! use parse_author_rs::{parse, Author};
+//! use parse_author::{parse, Author};
 //!
 //! let a = parse("Jon Schlinkert <jon@example.com> (https://example.com)");
 //! assert_eq!(a.name.as_deref(), Some("Jon Schlinkert"));
@@ -20,7 +20,7 @@
 //! A name-only string sets only `name`:
 //!
 //! ```
-//! use parse_author_rs::parse;
+//! use parse_author::parse;
 //!
 //! assert_eq!(parse("Jon Schlinkert").name.as_deref(), Some("Jon Schlinkert"));
 //! ```
@@ -28,7 +28,7 @@
 //! Input with no parts returns the default (all `None`):
 //!
 //! ```
-//! use parse_author_rs::{parse, Author};
+//! use parse_author::{parse, Author};
 //!
 //! assert_eq!(parse(""), Author::default());
 //! assert_eq!(parse("   "), Author::default());
@@ -93,7 +93,7 @@ pub struct Author {
 /// # Examples
 ///
 /// ```
-/// use parse_author_rs::parse;
+/// use parse_author::parse;
 ///
 /// let a = parse("Sean Lang <slang800@gmail.com> (http://slang.cx)");
 /// assert_eq!(a.name.as_deref(), Some("Sean Lang"));
@@ -104,7 +104,7 @@ pub struct Author {
 /// Fields may appear in any order:
 ///
 /// ```
-/// use parse_author_rs::parse;
+/// use parse_author::parse;
 ///
 /// let a = parse("(https://example.com) <jon@example.com>");
 /// assert_eq!(a.email.as_deref(), Some("jon@example.com"));
