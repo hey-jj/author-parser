@@ -1,7 +1,9 @@
 //! Edge-case behavior the canonical suite does not exercise.
 //!
-//! These pin grammar quirks: the ASCII word gate, last-token-wins, the
-//! trailing-anchor failure, mismatched brackets, and inner whitespace.
+//! These pin grammar quirks: the ASCII word gate, last-token-wins, adjacent
+//! repeated tokens, the trailing-anchor failure, mismatched brackets, inner
+//! whitespace inside names and bracket values, and Unicode whitespace
+//! trimming.
 
 use parse_author::{parse, Author};
 
@@ -39,6 +41,45 @@ fn inner_whitespace_in_name_is_preserved() {
     assert_eq!(
         parse("Jon   Q   Public"),
         author(Some("Jon   Q   Public"), None, None)
+    );
+}
+
+#[test]
+fn inner_whitespace_in_bracket_value_is_preserved() {
+    // The inner class keeps any byte that is not a closing bracket, so tabs
+    // and newlines inside a token survive. Only the surrounding run is trimmed.
+    assert_eq!(parse("<a\nb>"), author(None, Some("a\nb"), None));
+    assert_eq!(parse("<a\tb>"), author(None, Some("a\tb"), None));
+    assert_eq!(parse("(u\nv)"), author(None, None, Some("u\nv")));
+    assert_eq!(
+        parse("Jon <a\tb> (u v)"),
+        author(Some("Jon"), Some("a\tb"), Some("u v"))
+    );
+}
+
+#[test]
+fn unicode_whitespace_is_trimmed() {
+    // The regex `\s` is Unicode-aware, so it trims NBSP, em space, vertical
+    // tab, and form feed around the parts the same as plain spaces.
+    assert_eq!(
+        parse("\u{00a0}Jon\u{00a0}"),
+        author(Some("Jon"), None, None)
+    );
+    assert_eq!(
+        parse("\u{2003}Jon\u{2003}"),
+        author(Some("Jon"), None, None)
+    );
+    assert_eq!(
+        parse("\u{000b}Jon\u{000b}"),
+        author(Some("Jon"), None, None)
+    );
+    assert_eq!(
+        parse("\u{000c}Jon\u{000c}"),
+        author(Some("Jon"), None, None)
+    );
+    assert_eq!(
+        parse("\u{00a0}<a@b>\u{00a0}"),
+        author(None, Some("a@b"), None)
     );
 }
 
@@ -89,9 +130,31 @@ fn trailing_bracket_junk_returns_default() {
 }
 
 #[test]
-fn three_or_more_bracket_groups_return_default() {
+fn whitespace_separated_third_token_returns_default() {
+    // A third token set off by whitespace defeats the trailing anchor.
     assert_eq!(parse("Name <a@b.com> (u1) (u2)"), Author::default());
     assert_eq!(parse("<e> (u1) (u2)"), Author::default());
+    assert_eq!(parse("(u1) (u2) (u3)"), Author::default());
+    assert_eq!(parse("<a> <b> <c>"), Author::default());
+}
+
+#[test]
+fn adjacent_repeated_tokens_keep_the_last() {
+    // The trailing group repeats over tokens with no whitespace between them,
+    // so it consumes them all and keeps the last of each kind.
+    assert_eq!(parse("(u1)(u2)(u3)"), author(None, None, Some("u3")));
+    assert_eq!(parse("<a><b><c>"), author(None, Some("c"), None));
+    assert_eq!(parse("<x><y>"), author(None, Some("y"), None));
+    assert_eq!(
+        parse("Jon (u1)(u2)(u3)"),
+        author(Some("Jon"), None, Some("u3"))
+    );
+    // One whitespace boundary between the first and second token is allowed;
+    // the rest are still adjacent, so the match holds.
+    assert_eq!(
+        parse("Jon (u1) (u2)(u3)"),
+        author(Some("Jon"), None, Some("u3"))
+    );
 }
 
 #[test]
