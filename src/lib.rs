@@ -74,7 +74,7 @@ static AUTHOR_RE: LazyLock<Regex> = LazyLock::new(|| {
 /// Each field is `Some` only when the corresponding part was found and
 /// non-empty. An input with no usable parts yields [`Author::default`], where
 /// every field is `None`.
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Author {
     /// The name segment, trimmed of surrounding whitespace. Internal
     /// whitespace is kept verbatim.
@@ -147,6 +147,24 @@ pub fn parse(input: &str) -> Author {
     }
 
     author
+}
+
+/// Build an [`Author`] from a string slice.
+///
+/// This forwards to [`parse`] and never fails, so callers can write
+/// `let a: Author = s.into();`.
+///
+/// ```
+/// use parse_author::Author;
+///
+/// let a: Author = "Jon Schlinkert <jon@example.com>".into();
+/// assert_eq!(a.name.as_deref(), Some("Jon Schlinkert"));
+/// assert_eq!(a.email.as_deref(), Some("jon@example.com"));
+/// ```
+impl From<&str> for Author {
+    fn from(input: &str) -> Self {
+        parse(input)
+    }
 }
 
 /// True for an ASCII word byte: a letter, a digit, or an underscore.

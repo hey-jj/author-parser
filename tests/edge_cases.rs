@@ -16,6 +16,13 @@ fn author(name: Option<&str>, email: Option<&str>, url: Option<&str>) -> Author 
 }
 
 #[test]
+fn from_str_matches_parse() {
+    let a: Author = "Jon Schlinkert <jon@x.com> (http://x.com)".into();
+    assert_eq!(a, parse("Jon Schlinkert <jon@x.com> (http://x.com)"));
+    assert_eq!(Author::from(""), Author::default());
+}
+
+#[test]
 fn whitespace_only_returns_default() {
     assert_eq!(parse("   "), Author::default());
     assert_eq!(parse("\t"), Author::default());
