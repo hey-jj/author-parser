@@ -40,8 +40,12 @@
 //!   bracket decides the field, so mismatched pairs like `<x)` still read as
 //!   email and `(x>` still read as url.
 //! - Empty bracket tokens (`<>` or `()`) are dropped.
-//! - At most two bracket tokens are allowed. Three or more fail to match and
-//!   return the default.
+//! - The grammar holds one optional first bracket token plus a repeated group
+//!   that consumes adjacent tokens with no whitespace between them. Adjacent
+//!   tokens match and the last one of each kind wins, so `(u1)(u2)(u3)` reads
+//!   as `url = "u3"`. A token set off by whitespace past the single boundary
+//!   the grammar allows breaks the match, so `(u1) (u2) (u3)` returns the
+//!   default.
 //! - When two tokens set the same field, the second wins.
 //! - The presence gate uses an ASCII word character check (`[A-Za-z0-9_]`).
 //!   A string with no ASCII word character returns the default even if it
@@ -60,10 +64,14 @@ use regex::Regex;
 /// Group layout on a match:
 /// - group 1: name, the lazy run of text before the first `<` or `(`.
 /// - group 2 / 3: first bracket token with its brackets / its inner value.
-/// - group 4 / 5: second bracket token with its brackets / its inner value.
+/// - group 4 / 5: last repetition of the trailing token with its brackets /
+///   its inner value.
 ///
-/// The trailing anchor plus the fixed shape mean a third bracket token makes
-/// the whole pattern fail, which is the intended cap of two tokens.
+/// The trailing group repeats over adjacent tokens and keeps only the last
+/// one, so `(u1)(u2)(u3)` matches with group 4 holding `(u3)`. A token set off
+/// by whitespace past the single boundary the grammar allows defeats the
+/// trailing anchor, so the whole pattern fails and the parse returns the
+/// default.
 static AUTHOR_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"^\s*([^<(]*?)\s*([<(]([^>)]*?)[>)])?\s*([<(]([^>)]*?)[>)])*\s*$")
         .expect("author pattern is valid")

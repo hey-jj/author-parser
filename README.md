@@ -66,8 +66,11 @@ Name<email>
 - A bracket token is `<...>` for email or `(...)` for url. The leading bracket
   decides the field, so mismatched pairs like `<x)` still read as email.
 - Empty bracket tokens (`<>` or `()`) are dropped.
-- At most two bracket tokens are allowed. Three or more fail and return the
-  default.
+- The grammar holds one optional first bracket token plus a repeated group that
+  consumes adjacent tokens with no whitespace between them. Adjacent tokens
+  match and the last one of each kind wins, so `(u1)(u2)(u3)` reads as
+  `url = "u3"`. A token set off by whitespace past the single boundary the
+  grammar allows breaks the match, so `(u1) (u2) (u3)` returns the default.
 - When two tokens set the same field, the second wins.
 - The presence gate uses an ASCII word character check. A string with no ASCII
   word character returns the default, even when it holds non-ASCII letters. A
