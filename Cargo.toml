@@ -1,11 +1,11 @@
 [package]
-name = "parse-author-rs"
+name = "author-string"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.80"
 description = "Parse an npm person string (Name <email> (url)) into name, email, and url parts"
 license = "MIT"
-repository = "https://github.com/hey-jj/parse-author-rs"
+repository = "https://github.com/hey-jj/author-string"
 readme = "README.md"
 keywords = ["author", "package-json", "person", "parser", "npm"]
 categories = ["parsing", "parser-implementations"]

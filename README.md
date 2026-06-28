@@ -1,4 +1,4 @@
-# parse-author-rs
+# author-string
 
 Parse an npm "person" string into its parts.
 
@@ -11,7 +11,7 @@ crate parses that shorthand into an `Author` with optional `name`, `email`, and
 
 ```toml
 [dependencies]
-parse-author-rs = "0.1"
+author-string = "0.1"
 ```
 
 ## Usage
