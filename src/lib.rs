@@ -114,7 +114,8 @@ pub struct Author {
 pub fn parse(input: &str) -> Author {
     // Presence gate. Skip the match when there is nothing word-like to keep.
     // ASCII word characters only, to match the npm grammar's gate exactly.
-    if input.is_empty() || !input.bytes().any(is_ascii_word) {
+    // An empty string has no word byte, so this also covers "".
+    if !input.bytes().any(is_ascii_word) {
         return Author::default();
     }
 
