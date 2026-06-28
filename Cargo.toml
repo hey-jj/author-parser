@@ -2,9 +2,20 @@
 name = "parse-author-rs"
 version = "0.1.0"
 edition = "2021"
-description = "parse npm author/person string into {name,email,url}"
+description = "Parse an npm person string (Name <email> (url)) into name, email, and url parts"
 license = "MIT"
 repository = "https://github.com/hey-jj/parse-author-rs"
 readme = "README.md"
+keywords = ["author", "package-json", "person", "parser", "npm"]
+categories = ["parsing", "parser-implementations"]
 
 [dependencies]
+# Drives tokenization. The grammar allows mismatched brackets and lazy
+# matching whose backtracking is hard to reproduce by hand for every input.
+# One compiled pattern gives exact, total parity with the npm person grammar.
+regex = "1"
+
+[dev-dependencies]
+# Deserialize the shared golden table in tests/fixtures/cases.json.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
