@@ -1,0 +1,10 @@
+[package]
+name = "parse-author-rs"
+version = "0.1.0"
+edition = "2021"
+description = "parse npm author/person string into {name,email,url}"
+license = "MIT"
+repository = "https://github.com/hey-jj/parse-author-rs"
+readme = "README.md"
+
+[dependencies]
