@@ -1,19 +1,17 @@
 [package]
-name = "author-string"
+name = "author-parser"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.80"
 description = "Parse an npm person string (Name <email> (url)) into name, email, and url parts"
 license = "MIT"
-repository = "https://github.com/hey-jj/author-string"
+repository = "https://github.com/hey-jj/author-parser"
 readme = "README.md"
 keywords = ["author", "package-json", "person", "parser", "npm"]
 categories = ["parsing", "parser-implementations"]
 
 [lib]
-# The published crate name keeps its suffix, but the import path drops it so
-# callers write `use parse_author::parse`.
-name = "parse_author"
+name = "author_parser"
 
 [dependencies]
 # Drives tokenization. The grammar allows mismatched brackets and lazy

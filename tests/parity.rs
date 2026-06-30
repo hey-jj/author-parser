@@ -3,7 +3,7 @@
 //! Each test mirrors one assertion from the canonical npm test suite. The
 //! grouping matches that suite so coverage maps one to one.
 
-use parse_author::{parse, Author};
+use author_parser::{parse, Author};
 
 /// Build an expected [`Author`] from optional parts.
 fn author(name: Option<&str>, email: Option<&str>, url: Option<&str>) -> Author {

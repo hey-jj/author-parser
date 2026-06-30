@@ -1,4 +1,4 @@
-# author-string
+# author-parser
 
 Parse an npm "person" string into its parts.
 
@@ -11,13 +11,13 @@ crate parses that shorthand into an `Author` with optional `name`, `email`, and
 
 ```toml
 [dependencies]
-author-string = "0.1"
+author-parser = "0.1"
 ```
 
 ## Usage
 
 ```rust
-use parse_author::parse;
+use author_parser::parse;
 
 let a = parse("Jon Schlinkert <jon@example.com> (https://example.com)");
 assert_eq!(a.name.as_deref(), Some("Jon Schlinkert"));
@@ -29,7 +29,7 @@ A field is `Some` only when the matching part is present and non-empty. An
 input with no usable parts returns the default, where every field is `None`.
 
 ```rust
-use parse_author::{parse, Author};
+use author_parser::{parse, Author};
 
 assert_eq!(parse(""), Author::default());
 assert_eq!(parse("   "), Author::default());

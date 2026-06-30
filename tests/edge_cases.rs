@@ -5,7 +5,7 @@
 //! whitespace inside names and bracket values, and Unicode whitespace
 //! trimming.
 
-use parse_author::{parse, Author};
+use author_parser::{parse, Author};
 
 fn author(name: Option<&str>, email: Option<&str>, url: Option<&str>) -> Author {
     Author {
