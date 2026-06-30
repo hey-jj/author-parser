@@ -91,6 +91,33 @@ fn unicode_whitespace_is_trimmed() {
 }
 
 #[test]
+fn whitespace_trimming_follows_rust_whitespace_set() {
+    // Trimming uses Rust's `\s` (Unicode White_Space), not the npm engine's
+    // set. U+0085 (NEL) is White_Space, so it is trimmed. U+FEFF (BOM) is not,
+    // so it stays in the name. The npm engine does the reverse.
+    assert_eq!(
+        parse("\u{0085}Jon\u{0085}"),
+        author(Some("Jon"), None, None)
+    );
+    assert_eq!(
+        parse("\u{feff}Jon\u{feff}"),
+        author(Some("\u{feff}Jon\u{feff}"), None, None)
+    );
+}
+
+#[test]
+fn name_after_bracket_token_returns_default() {
+    // The name must lead. A bracket token followed by a bare name does not
+    // parse, so these return the default instead of reading the name.
+    assert_eq!(parse("<jon@example.com> Jon Schlinkert"), Author::default());
+    assert_eq!(parse("(https://example.com) Jon"), Author::default());
+    assert_eq!(
+        parse("<jon@example.com> Jon (https://example.com)"),
+        Author::default()
+    );
+}
+
+#[test]
 fn non_ascii_only_name_is_dropped() {
     // No ASCII word character, so the gate returns the default.
     assert_eq!(parse("é"), Author::default());

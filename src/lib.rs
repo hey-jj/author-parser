@@ -3,8 +3,9 @@
 //! npm lets the `author`, `contributors`, and `maintainers` fields of a
 //! `package.json` use a shorthand string of the form `Name <email> (url)`.
 //! This crate parses that shorthand into an [`Author`] with optional `name`,
-//! `email`, and `url`. Every part is optional and the parts may appear in any
-//! order.
+//! `email`, and `url`. Every part is optional. The name, when present, is the
+//! leading text before the first bracket. The email and url tokens may appear
+//! in either order.
 //!
 //! # Examples
 //!
@@ -109,7 +110,7 @@ pub struct Author {
 /// assert_eq!(a.url.as_deref(), Some("http://slang.cx"));
 /// ```
 ///
-/// Fields may appear in any order:
+/// The email and url tokens may appear in either order:
 ///
 /// ```
 /// use author_parser::parse;

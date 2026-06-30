@@ -5,7 +5,8 @@ Parse an npm "person" string into its parts.
 npm lets the `author`, `contributors`, and `maintainers` fields of a
 `package.json` use a shorthand string of the form `Name <email> (url)`. This
 crate parses that shorthand into an `Author` with optional `name`, `email`, and
-`url`. Every part is optional and the parts may appear in any order.
+`url`. Every part is optional. The name, when present, is the leading text
+before the first bracket. The email and url tokens may appear in either order.
 
 ## Installation
 
@@ -37,7 +38,8 @@ assert_eq!(parse("   "), Author::default());
 
 ## Supported formats
 
-Any subset of the parts works, in any order:
+Any subset of the parts works. The name, when present, leads; email and url
+may appear in either order:
 
 ```text
 Name

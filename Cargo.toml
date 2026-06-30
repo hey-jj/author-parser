@@ -16,5 +16,7 @@ name = "author_parser"
 [dependencies]
 # Drives tokenization. The grammar allows mismatched brackets and lazy
 # matching whose backtracking is hard to reproduce by hand for every input.
-# One compiled pattern gives exact, total parity with the npm person grammar.
+# One compiled pattern matches the npm person grammar, except whitespace
+# trimming uses Rust's `\s` (Unicode White_Space): it trims U+0085 and keeps
+# U+FEFF, the reverse of the npm engine.
 regex = "1"
