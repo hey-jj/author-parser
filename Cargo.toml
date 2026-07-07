@@ -10,9 +10,6 @@ readme = "README.md"
 keywords = ["author", "package-json", "person", "parser", "npm"]
 categories = ["parsing", "parser-implementations"]
 
-[lib]
-name = "author_parser"
-
 [dependencies]
 # Drives tokenization. The grammar allows mismatched brackets and lazy
 # matching whose backtracking is hard to reproduce by hand for every input.
