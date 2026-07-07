@@ -42,11 +42,13 @@
 //!   email and `(x>` still read as url.
 //! - Empty bracket tokens (`<>` or `()`) are dropped.
 //! - The grammar holds one optional first bracket token plus a repeated group
-//!   that consumes adjacent tokens with no whitespace between them. Adjacent
-//!   tokens match and the last one of each kind wins, so `(u1)(u2)(u3)` reads
-//!   as `url = "u3"`. A token set off by whitespace past the single boundary
-//!   the grammar allows breaks the match, so `(u1) (u2) (u3)` returns the
-//!   default.
+//!   that consumes adjacent tokens with no whitespace between them. Only the
+//!   first bracket token and the final token in the adjacent trailing run are
+//!   read. Middle tokens in a mixed run can be dropped, so `<a>(u)<b>` reads
+//!   as `email = "b"` and `url = None`. Same-kind adjacent tokens still keep
+//!   the final value, so `(u1)(u2)(u3)` reads as `url = "u3"`. A token set off
+//!   by whitespace past the single boundary the grammar allows breaks the
+//!   match, so `(u1) (u2) (u3)` returns the default.
 //! - When two tokens set the same field, the second wins.
 //! - The presence gate uses an ASCII word character check (`[A-Za-z0-9_]`).
 //!   A string with no ASCII word character returns the default even if it
